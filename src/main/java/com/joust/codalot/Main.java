@@ -29,7 +29,7 @@ public class Main {
                     codalot.addKnightToTavern(knight);
                 }
             }
-            codalot.day();
+            codalot.hour();
         }
         codalot.grantBonusXp();
 

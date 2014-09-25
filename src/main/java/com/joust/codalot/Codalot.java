@@ -1,6 +1,7 @@
 package com.joust.codalot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Codalot {
 
@@ -15,15 +16,26 @@ public class Codalot {
         }
     }
 
+    //TODO Make this immutable?
+    public List<Knight> getKnights() {
+        return knights;
+    }
+
     public void setKnight(int id, com.joust.codalot.Knight.Position position) {
         Knight knight = knights.get(id);
         knight.setPosition(position);
     }
 
-    public void day() {
+    public void hour() {
         for (Knight knight : knights) {
-            knight.incrementStamina(knight.isInTavern() ? 1 : -1);
-            knight.incrementXp(knight.isInTrainingYard() ? 1 : 0);
+
+            boolean xp = knight.isInTrainingYard()
+                    && knight.getStamina() > 0;
+            knight.incrementXp(xp ? 1 : 0);
+
+            knight.incrementStamina(
+                    knight.isInTavern() ? 1 : -1);
+
         }
     }
 
