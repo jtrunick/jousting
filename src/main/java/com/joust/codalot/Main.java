@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Main {
 
-    private static final int KNIGHT_COUNT = 6;
+    private static final int KNIGHT_COUNT = 12;
 
     private Main() {
     }

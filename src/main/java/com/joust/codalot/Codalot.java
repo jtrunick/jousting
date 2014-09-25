@@ -5,18 +5,19 @@ import java.util.List;
 
 public class Codalot {
 
+    private static final int XP_EARN_FOR_BONUS = 3;
+
     ArrayList<Knight> knights = new ArrayList<Knight>();
 
     public Codalot() {
     }
 
     Codalot(int numberOfKnights) {
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < numberOfKnights; ++i) {
             knights.add(new Knight());
         }
     }
 
-    //TODO Make this immutable?
     public List<Knight> getKnights() {
         return knights;
     }
@@ -62,33 +63,34 @@ public class Codalot {
     }
 
     public void grantBonusXp() {
-        int bonusKnights = 0;
+        List<Knight> earners = findKnightsWithIncreasedXp(knights, XP_EARN_FOR_BONUS);
+
+        int group = earners.size();
+        if (group == 3) {
+            increaseXp(earners, 5);
+        }
+        else if (group == 5) {
+            increaseXp(earners, 10);
+        }
+        else if (group == 6) {
+            increaseXp(earners, 20);
+        }
+    }
+
+    static void increaseXp(List<Knight> knights, int increaseXp) {
         for (Knight knight : knights) {
-            if (knight.getXp() >= 3) {
-                bonusKnights++;
+            knight.incrementXp(increaseXp);
+        }
+    }
+
+    static List<Knight> findKnightsWithIncreasedXp(List<Knight> knights, int atLeast) {
+        List<Knight> toCaller = new ArrayList<Knight>();
+        for (Knight knight : knights) {
+            if (knight.getXp() >= atLeast) {
+                toCaller.add(knight);
             }
         }
-        if (bonusKnights == 3) {
-            for (Knight knight : knights) {
-                if (knight.getXp() >= 3) {
-                    knight.setXp(knight.getXp() + 5);
-                }
-            }
-        }
-        if (bonusKnights == 5) {
-            for (Knight knight : knights) {
-                if (knight.getXp() >= 3) {
-                    knight.setXp(knight.getXp() + 10);
-                }
-            }
-        }
-        if (bonusKnights == 6) {
-            for (Knight knight : knights) {
-                if (knight.getXp() >= 3) {
-                    knight.setXp(knight.getXp() + 20);
-                }
-            }
-        }
+        return toCaller;
     }
 
 

@@ -29,7 +29,7 @@ public class Knight {
         this.xp = xp;
     }
 
-    public void incrementXp(int xp) {
+    void incrementXp(int xp) {
         this.xp += xp;
     }
 
@@ -49,21 +49,11 @@ public class Knight {
         this.position = p;
     }
 
-    boolean isInTavern() {
+    public boolean isInTavern() {
         return position == Position.TAVERN;
-    }
-
-    private void setInTavern(boolean isInTavern) {
-        this.position = Position.TAVERN;
     }
 
     public boolean isInTrainingYard() {
         return this.position == Position.TRAINING_YARD;
     }
-
-    private void setInTrainingYard(boolean isInTrainingYard) {
-        this.position = Position.TRAINING_YARD;
-    }
-
-
 }

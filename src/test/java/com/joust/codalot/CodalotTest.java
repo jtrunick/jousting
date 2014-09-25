@@ -17,6 +17,7 @@ public class CodalotTest {
     }
 
 
+    //JST-2
     public void testNoXpWhileTraining() {
         Codalot codalot = new Codalot(2);
 
@@ -38,5 +39,33 @@ public class CodalotTest {
         assert(codalot.getKnights().get(1).getXp() == 1);
     }
 
+
+    public int XpGroupNBonus(int knightCount, int initialXp) {
+        Codalot codalot = new Codalot(6);
+
+        for (int i = 0; i < knightCount; i++) {
+            codalot.getKnights().get(i).setXp(initialXp);
+        }
+        codalot.grantBonusXp();
+
+        int earned = codalot.getKnights().get(0).getXp();
+        return earned;
+    }
+
+    //JST-3
+    public void testXpGroupNBonus() {
+        assert(XpGroupNBonus(3, 3) == 8);
+        assert(XpGroupNBonus(3, 4) == 9);   // at least 3
+        assert(XpGroupNBonus(5, 3) == 13);
+        assert(XpGroupNBonus(6, 3) == 23);
+        assert(XpGroupNBonus(3, 2) == 2);   // Earned no bonus -- not enough xp earned
+        assert(XpGroupNBonus(4, 3) == 3);   // Earned no bonus -- not right size group
+    }
+
+
+    public static void main(String args[]) {
+        CodalotTest test = new CodalotTest();
+        test.testXpGroupNBonus();
+    }
 
 }
