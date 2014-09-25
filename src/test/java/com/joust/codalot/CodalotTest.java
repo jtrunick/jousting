@@ -11,7 +11,7 @@ public class CodalotTest {
         codalot.setKnight(3, Knight.Position.TRAINING_YARD);
         codalot.setKnight(4, Knight.Position.TRAINING_YARD);
         codalot.setKnight(5, Knight.Position.TRAINING_YARD);
-        codalot.hour();
+        codalot.updateKnightForHour();
 
         assert(codalot.calculateEarnedXp() == 0);
     }
@@ -23,7 +23,7 @@ public class CodalotTest {
 
         codalot.setKnight(0, Knight.Position.TRAINING_YARD);
         codalot.setKnight(1, Knight.Position.TAVERN);
-        codalot.hour();
+        codalot.updateKnightForHour();
 
         // Knight 0 shouldn't have XP, because no stamina
         // Knight 1 should have earned stamina because tavern
@@ -31,7 +31,7 @@ public class CodalotTest {
         assert(codalot.getKnights().get(1).getStamina() == 1);
 
         codalot.setKnight(1, Knight.Position.TRAINING_YARD);
-        codalot.hour();
+        codalot.updateKnightForHour();
 
         // Knight 0 shouldn't have XP, because no stamina
         // Knight 1 should have earned XP, because he earned stamina on day 1
@@ -46,7 +46,7 @@ public class CodalotTest {
         for (int i = 0; i < knightCount; i++) {
             codalot.getKnights().get(i).setXp(initialXp);
         }
-        codalot.grantBonusXp();
+        codalot.updateKnightForDay();
 
         int earned = codalot.getKnights().get(0).getXp();
         return earned;
@@ -60,6 +60,23 @@ public class CodalotTest {
         assert(XpGroupNBonus(6, 3) == 23);
         assert(XpGroupNBonus(3, 2) == 2);   // Earned no bonus -- not enough xp earned
         assert(XpGroupNBonus(4, 3) == 3);   // Earned no bonus -- not right size group
+    }
+
+
+    public void testKnightWentNegative() {
+        Codalot codalot = new Codalot(6);
+
+        for (int i = 0; i < 3; i++) {
+            codalot.getKnights().get(i).setXp(3);
+        }
+        Knight zero = codalot.getKnights().get(0);
+        zero.setStaminaWentNegative(true);
+        Knight one = codalot.getKnights().get(1);
+        codalot.updateKnightForDay();
+
+        //knight 0 gets no bonus!
+        assert (zero.getXp() == 3);
+        assert (one.getXp() == 8);
     }
 
 

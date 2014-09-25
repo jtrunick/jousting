@@ -11,33 +11,39 @@ public class Main {
     }
 
     private static void simulate() {
-        Codalot codalot = new Codalot();
+        final Random random = new Random(1);
+        final Codalot codalot = new Codalot(KNIGHT_COUNT);
 
-        ArrayList<Knight> knights = new ArrayList<Knight>();
-        for (int i = 0; i < KNIGHT_COUNT; ++i) {
-            knights.add(new Knight());
-        }
+        Codalot.Callback callback = new Codalot.Callback() {
 
-        Random random = new Random(1);
-        for (int i = 0; i < 24; ++i) {
-            codalot.clearKnights();
-            for (Knight knight : knights) {
-                int randomVal = random.nextInt(2);
-                if (randomVal == 0) {
-                    codalot.addKnightToTrainingYard(knight);
-                } else if (randomVal == 1) {
-                    codalot.addKnightToTavern(knight);
+            public void beforeHour(int count) {
+                // This is called before each hour
+
+                for (int i = 0; i < KNIGHT_COUNT; i++) {
+                    int randomVal = random.nextInt(2);
+                    if (randomVal == 0) {
+                        codalot.setKnight(i, Knight.Position.TRAINING_YARD);
+                    } else if (randomVal == 1) {
+                        codalot.setKnight(i, Knight.Position.TAVERN);
+                    }
                 }
             }
-            codalot.hour();
-        }
-        codalot.grantBonusXp();
 
-        int totalXp = 0;
-        for (Knight knight : knights) {
-            totalXp += knight.getXp();
-        }
-        System.out.println(String.format("Total XP earned by all %d knights: %d", knights.size(), totalXp));
+            public void updateAfterDay(int count) {
+                // This is called after the daily bonus rules are run.
+                // Do somthing here... could do special checks for interesting points in time.
+                // Or add more callbacks.
+            }
+
+            public void done() {
+                int totalXp = 0;
+                for (Knight knight : codalot.getKnights()) {
+                    totalXp += knight.getXp();
+                }
+                System.out.println(String.format("Total XP earned by all %d knights: %d", codalot.getKnights().size(), totalXp));
+            }
+        };
+        codalot.runHours(callback, 24 * 7 * 12);  // Run for 12 weeks.
     }
 
     public static void main(String[] args) {

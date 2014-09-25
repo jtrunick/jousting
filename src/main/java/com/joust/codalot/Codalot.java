@@ -5,6 +5,12 @@ import java.util.List;
 
 public class Codalot {
 
+    public static interface Callback {
+        void beforeHour(int count);
+        void updateAfterDay(int count);
+        void done();
+    }
+
     private static final int XP_EARN_FOR_BONUS = 3;
 
     ArrayList<Knight> knights = new ArrayList<Knight>();
@@ -27,7 +33,20 @@ public class Codalot {
         knight.setPosition(position);
     }
 
-    public void hour() {
+    public void runHours(Callback callback, int hours) {
+
+        for (int i = 0; i < hours; i++) {
+            callback.beforeHour(i);
+            updateKnightForHour();
+            if (i % 24 == 0) {
+                updateKnightForDay();
+                callback.updateAfterDay(i % 24);
+            }
+        }
+        callback.done();
+    }
+
+    public void updateKnightForHour() {
         for (Knight knight : knights) {
 
             boolean xp = knight.isInTrainingYard()
@@ -62,7 +81,8 @@ public class Codalot {
         knights.add(knight);
     }
 
-    public void grantBonusXp() {
+    // Called for the "day"
+    public void updateKnightForDay() {
         List<Knight> earners = findKnightsWithIncreasedXp(knights, XP_EARN_FOR_BONUS);
 
         int group = earners.size();
@@ -75,11 +95,20 @@ public class Codalot {
         else if (group == 6) {
             increaseXp(earners, 20);
         }
+        resetKnights(knights);
+    }
+
+    static void resetKnights(List<Knight> knights) {
+        for (Knight knight : knights) {
+            knight.reset();
+        }
     }
 
     static void increaseXp(List<Knight> knights, int increaseXp) {
         for (Knight knight : knights) {
-            knight.incrementXp(increaseXp);
+            if (!knight.getStaminaWentNegative()) {
+                knight.incrementXp(increaseXp);
+            }
         }
     }
 

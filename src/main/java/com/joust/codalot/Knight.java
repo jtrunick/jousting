@@ -10,9 +10,11 @@ public class Knight {
 
     private int xp;
     private int stamina;
+    private boolean staminaWentNegative;
     private Position position = Position.TAVERN;
 
     Knight() {
+        reset();
         xp = 0;
         stamina = 0;
     }
@@ -37,12 +39,27 @@ public class Knight {
         return stamina;
     }
 
+    void setStaminaWentNegative(boolean value) {
+        this.staminaWentNegative = value;
+    }
+
+    boolean getStaminaWentNegative() {
+        return staminaWentNegative;
+    }
+
+    void reset() {
+        staminaWentNegative = false;
+    }
+
     void setStamina(int stamina) {
         this.stamina = stamina;
+        if (this.stamina < 0) {
+            staminaWentNegative = true;
+        }
     }
 
     void incrementStamina(int stamina) {
-        this.stamina += stamina;
+        setStamina(this.stamina + stamina);
     }
 
     void setPosition(Position p) {
