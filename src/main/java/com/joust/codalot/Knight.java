@@ -5,22 +5,33 @@ public class Knight {
 
     public static enum Position {
         TAVERN,
-        TRAINING_YARD
+        TRAINING_YARD,
+        ROUND_TABLE
     }
 
+    private boolean king;
     private int xp;
     private int stamina;
+    private int hoursAtRoundTable;
     private boolean staminaWentNegative;
     private Position position = Position.TAVERN;
 
     Knight() {
-        reset();
+        resetDay();
         xp = 0;
         stamina = 0;
     }
 
     Knight(Position p) {
         this.position = p;
+    }
+
+    public boolean isKing() {
+        return this.king;
+    }
+
+    void kingMe() {
+        this.king = true;
     }
 
     public int getXp() {
@@ -35,6 +46,16 @@ public class Knight {
         this.xp += xp;
     }
 
+    int getHoursAtRoundTable() {
+        return this.hoursAtRoundTable;
+    }
+
+    void incrementHoursAtRoundTable() {
+        if (isAtRoundTable()) {
+            this.hoursAtRoundTable += 1;
+        }
+    }
+
     public int getStamina() {
         return stamina;
     }
@@ -47,8 +68,9 @@ public class Knight {
         return staminaWentNegative;
     }
 
-    void reset() {
+    void resetDay() {
         staminaWentNegative = false;
+        hoursAtRoundTable = 0;
     }
 
     void setStamina(int stamina) {
@@ -64,6 +86,10 @@ public class Knight {
 
     void setPosition(Position p) {
         this.position = p;
+    }
+
+    public boolean isAtRoundTable() {
+        return position == Position.ROUND_TABLE;
     }
 
     public boolean isInTavern() {

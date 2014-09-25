@@ -36,10 +36,7 @@ public class Main {
             }
 
             public void done() {
-                int totalXp = 0;
-                for (Knight knight : codalot.getKnights()) {
-                    totalXp += knight.getXp();
-                }
+                int totalXp = codalot.calculateEarnedXp();
                 System.out.println(String.format("Total XP earned by all %d knights: %d", codalot.getKnights().size(), totalXp));
             }
         };

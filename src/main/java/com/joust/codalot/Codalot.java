@@ -22,6 +22,7 @@ public class Codalot {
         for (int i = 0; i < numberOfKnights; ++i) {
             knights.add(new Knight());
         }
+        knights.get(0).kingMe();  // Arthur lives, long live the king!
     }
 
     public List<Knight> getKnights() {
@@ -39,7 +40,7 @@ public class Codalot {
             callback.beforeHour(i);
             updateKnightForHour();
             if (i % 24 == 0) {
-                updateKnightForDay();
+                updateKnightsForDay();
                 callback.updateAfterDay(i % 24);
             }
         }
@@ -56,13 +57,16 @@ public class Codalot {
             knight.incrementStamina(
                     knight.isInTavern() ? 1 : -1);
 
+            knight.incrementHoursAtRoundTable();
         }
     }
 
     public int calculateEarnedXp() {
         int total = 0;
         for (Knight knight : knights) {
-            total += knight.getXp();
+            if (!knight.isKing()) {
+                total += knight.getXp();
+            }
         }
         return total;
     }
@@ -82,7 +86,7 @@ public class Codalot {
     }
 
     // Called for the "day"
-    public void updateKnightForDay() {
+    public void updateKnightsForDay() {
         List<Knight> earners = findKnightsWithIncreasedXp(knights, XP_EARN_FOR_BONUS);
 
         int group = earners.size();
@@ -95,18 +99,19 @@ public class Codalot {
         else if (group == 6) {
             increaseXp(earners, 20);
         }
-        resetKnights(knights);
+        resetKnightsForDay(knights);
     }
 
-    static void resetKnights(List<Knight> knights) {
+    static void resetKnightsForDay(List<Knight> knights) {
         for (Knight knight : knights) {
-            knight.reset();
+            knight.resetDay();
         }
     }
 
     static void increaseXp(List<Knight> knights, int increaseXp) {
         for (Knight knight : knights) {
-            if (!knight.getStaminaWentNegative()) {
+            if (!knight.getStaminaWentNegative()
+                    && knight.getHoursAtRoundTable() > 3) {
                 knight.incrementXp(increaseXp);
             }
         }

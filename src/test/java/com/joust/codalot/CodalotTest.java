@@ -46,7 +46,7 @@ public class CodalotTest {
         for (int i = 0; i < knightCount; i++) {
             codalot.getKnights().get(i).setXp(initialXp);
         }
-        codalot.updateKnightForDay();
+        codalot.updateKnightsForDay();
 
         int earned = codalot.getKnights().get(0).getXp();
         return earned;
@@ -72,7 +72,7 @@ public class CodalotTest {
         Knight zero = codalot.getKnights().get(0);
         zero.setStaminaWentNegative(true);
         Knight one = codalot.getKnights().get(1);
-        codalot.updateKnightForDay();
+        codalot.updateKnightsForDay();
 
         //knight 0 gets no bonus!
         assert (zero.getXp() == 3);
